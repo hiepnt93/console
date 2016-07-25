@@ -1,0 +1,104 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Price\Tier */
+$element = $block->getElement();
+?>
+<?php $_htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $_htmlClass   = $block->getElement()->getClass() ?>
+<?php $_htmlName    = $block->getElement()->getName() ?>
+<?php $_readonly    = $block->getElement()->getReadonly() ?>
+
+<?php $_priceValueValidation = $block->getPriceValidation('validate-greater-than-zero'); ?>
+
+
+
+    <div class="control">
+        <table class="admin__control-table tiers_table" id="tiers_table">
+            <thead>
+                <tr>
+                    <th class="col-group-value required"><?php /* @escapeNotVerified */ echo __('Membership Group') ?></th>
+                    <th class="col-group-priority required"><?php /* @escapeNotVerified */ echo __('Priority') ?></th>
+                    <th class="col-delete"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
+                </tr>
+            </thead>
+            <tbody id="<?php /* @escapeNotVerified */ echo $_htmlId ?>_container"></tbody>
+            <tfoot>
+                <tr>
+                    <td class="col-actions-add" colspan="3"><?php echo $block->getAddButtonHtml() ?></td>
+                </tr>
+            </tfoot>
+        </table>
+
+<script>
+require([
+    'mage/template',
+    "prototype",
+    "mage/adminhtml/form"
+], function (mageTemplate) {
+
+//<![CDATA[
+var membershipGroupTemplate = '<tr>'
+    + '<td class="col-group-value">'
+    + '<select class="<?php /* @escapeNotVerified */ echo $_htmlClass ?> required-entry" name="<?php /* @escapeNotVerified */ echo $_htmlName ?>[<%- data.index %>][group]" id="membership_row_<%- data.index %>_group">'
+    <?php foreach ($block->getElement()->getValues() as $_option): ?>
+    + '<option value="<?php /* @escapeNotVerified */ echo $_option['value'] ?>"><?php /* @escapeNotVerified */ echo $block->escapeJsQuote($block->escapeHtml($_option['label'])) ?></option>'
+    <?php endforeach ?>
+    + '</select></td>'
+    
+    + '<td class="col-group-priority"><input class="<?php /* @escapeNotVerified */ echo $_htmlClass ?> required-entry <?php /* @escapeNotVerified */ echo $_priceValueValidation ?>" type="text" name="<?php /* @escapeNotVerified */ echo $_htmlName ?>[<%- data.index %>][priority]" value="<%- data.priority %>" id="membership_row_<%- data.index %>_priority" /></td>'
+    + '<td class="col-delete"><input type="hidden" name="<?php /* @escapeNotVerified */ echo $_htmlName ?>[<%- data.index %>][delete]" class="delete" value="" id="membership_row_<%- data.index %>_delete" />'
+    + '<button title="<?php /* @escapeNotVerified */ echo $block->escapeHtml(__('Delete Membership Group')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="membership_row_<%- data.index %>_delete_button" onclick="return membershipControl.deleteItem(event);">'
+    + '<span><?php /* @escapeNotVerified */ echo __("Delete") ?></span></button></td>'
+    + '</tr>';
+
+var membershipControl = {
+    template: mageTemplate(membershipGroupTemplate),
+    itemsCount: 0,
+    addItem : function (group, priority) {
+        var data = {
+        	group: group,
+        	priority: priority,
+            index: this.itemsCount++
+        };
+
+        Element.insert($('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container'), {
+            bottom : this.template({
+                data: data
+            })
+        });
+        $('membership_row_' + data.index + '_group').value = data.group;
+        $('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container').select('input', 'select').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        
+    },
+    disableElement: function(el) {
+        el.disabled = true;
+        el.addClassName('disabled');
+    },
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input', 'select']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    }
+};
+<?php foreach ($block->getValues() as $_item): ?>
+membershipControl.addItem('<?php /* @escapeNotVerified */ echo $_item['group'] ?>', '<?php /* @escapeNotVerified */ echo $_item['priority'] ?>');
+<?php endforeach; ?>
+
+window.membershipControl = membershipControl;
+//]]>
+
+});
+</script>
+    </div>
+

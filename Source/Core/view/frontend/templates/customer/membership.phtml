@@ -1,0 +1,115 @@
+<?php
+use Magento\Framework\App\Action\Action;
+
+/** @var $block \Vnecoms\Membership\Block\Customer\Membership*/
+?>
+<div class="block block-dashboard-info">
+    <div class="block-title">
+        <strong><?php echo __("Membership Information")?></strong>
+        <?php if($block->isMembership()):?>
+        <button class="action primary" style="float: right;" onclick="jQuery('#membership-popup-mpdal').toggle();"><span><?php echo __("Renew")?></span></button>
+        <?php endif;?>
+    </div>
+    <div class="block-content">
+        <?php if($block->isMembership()):?>
+            <div class="box box-information">
+                <div class="box-content">
+                    <div class="box box-membership">
+                        <div class="box-content">
+                            <p><?php echo __("Package:")?> <strong><?php echo $block->getCurrentGroupName();?></strong></p>
+                            <p><?php echo __("Expiry Date:")?> <strong><?php echo $block->getExpiryDate()?></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php $_package = $block->getCurrentPackageProduct()?>
+            <div class="box box-newsletter box-membership-renew">
+                <div class="box-content">
+                    <div id="membership-popup-mpdal" style="display: none;">
+                        <div class="enewmembership-form">
+                            <h3><?php echo __("Renew package: %1",$_package->getName())?></h3>
+                            <?php $postParams = $block->getAddToCartPostParams($_package); ?>
+                            <form data-role="tocart-form" action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>" method="post">
+                                <fieldset class="fieldset info">
+                                    <div class="field">
+                                        <select name="membership[duration]"
+                                            data-validate="{required:true}"
+                                            id="vnecoms_membership_duration_<?php echo $_package->getId()?>"
+                                            class="input-text required-entry">
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+                                    <input type="hidden" name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>" value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+                                    <?php echo $block->getBlockHtml('formkey')?>
+                                    <div class="field">
+                                        <button type="submit"
+                                                title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+                                                class="action tocart primary">
+                                            <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/x-magento-init">
+            {
+                "#vnecoms_membership_duration_<?php echo $_package->getId()?>": {
+                        "Vnecoms_Membership/js/membership": {
+                        "valueFieldSelector": "#vnecoms_membership_duration_<?php echo $_package->getId()?>",
+                        "priceHolderSelector": ".membership-price .price-box",
+                        "durationOptions": <?php /* @escapeNotVerified */ echo $block->getOptionsJSON($_package) ?>,
+                        "priceFormat": <?php echo $block->getPriceFormatJSON()?>
+                    }
+                }
+            }
+            </script>
+                        
+            <script type="text/x-magento-init">
+            {
+                "[data-role=tocart-form], .form.map.checkout": {
+                    "catalogAddToCart": {}
+                }
+            }
+            </script>
+        <?php else:?>
+            <p><?php echo __("You are not in any memberhsip group. %1 to signup a membership group",'<a href="'.$block->getMembershipPricingUrl().'">'.__("Click Here").'</a>')?></p>
+        <?php endif;?>
+    </div>
+</div>
+
+
+<div class="block block-dashboard-orders">
+    <div class="block-title order">
+        <strong><?php echo __("Payment History")?></strong>
+    </div>
+    <div class="block-content">
+        <div class="table-wrapper payments-recent">
+            <table id="my-orders-table" class="data table table-payment-history">
+                <caption class="table-caption"><?php echo __("Payment History")?></caption>
+                <thead>
+                    <tr>
+                        <th class="col date" scope="col"><?php echo __("Date")?></th>
+                        <th class="col package" scope="col"><?php echo __("Package")?></th>
+                        <th class="col amount" scope="col"><?php echo __("Amount")?></th>
+                        <th class="col duration" scope="col"><?php echo __("Duration")?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($block->getPaymentHistory() as $_payment):?>
+                    <tr>
+                        <td class="col date" data-th="<?php echo __("Date")?>"><?php echo $block->formatDate($_payment->getCreatedAt())?></td>
+                        <td class="col package" data-th="<?php echo __("Package")?>"><?php echo $_payment->getPackage();?></td>
+                        <td class="col amount" data-th="<?php echo __("Amount")?>"><span class="price"><?php echo $block->formatPrice($_payment->getAmount());?></span></td>
+                        <td class="col duration" data-th="<?php echo __("Duration")?>"><?php echo $block->getDurationLabel($_payment->getDuration(), $_payment->getDurationUnit())?></td>
+                    </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        </div>
+        
+        <?php echo $block->getPagerHtml();?>
+    </div>
+</div>

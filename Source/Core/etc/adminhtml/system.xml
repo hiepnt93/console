@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+    	<tab id="vnecoms" translate="label" sortOrder="101">
+            <label>VNECOMS</label>
+        </tab>
+        <!-- Membership section -->
+        <section id="membership" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Membership</label>
+            <tab>vnecoms</tab>
+            <resource>Vnecoms_Membership::settings</resource>
+            <group id="general" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>General</label>
+	        	<field id="membership_group" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+					<source_model>Vnecoms\Membership\Model\Source\Config\Group</source_model>
+					<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Group</frontend_model>
+					<backend_model>Vnecoms\Membership\Model\Config\Backend\Group</backend_model>
+	            	<label>Membership groups</label>
+	            	<frontend_class>required-entry</frontend_class>
+	            	<comment><![CDATA[
+	            	<p>This list is excluded the default customer group which is selected under <strong>Customers</strong> -> <strong>Customer Configuration</strong> -> <strong>Create New Account Options</strong> -> <strong>Default Group</strong></p>
+	            	<p>Member in higher priority membership can't buy a lower priority membership.</p>	            	
+	            	]]></comment>
+	        	</field>
+			</group>
+			<group id="membership_page" translate="label tooltip" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Membership Page</label>
+				<field id="page_title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Page Title</label>
+	        	</field>
+	        	<field id="meta_keyword" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Meta Keywords</label>
+	            	<tooltip>Separate keywords by comma</tooltip>
+	        	</field>
+	        	<field id="meta_description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Meta Description</label>
+	        	</field>
+			</group>
+			<group id="color" translate="label tooltip" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Color</label>
+				<field id="package1" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #1</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+	        	<field id="package2" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #2</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+	        	<field id="package3" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #3</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+	        	<field id="package4" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #4</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+	        	<field id="package5" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #5</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+	        	<field id="package6" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+	            	<label>Package #6</label>
+	            	<frontend_model>Vnecoms\Membership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+	        	</field>
+			</group>
+		</section>
+    </system>
+</config>

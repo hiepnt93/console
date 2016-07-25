@@ -1,0 +1,8 @@
+<?php
+/** @var $block \Magento\Customer\Block\Account\AuthorizationLink */
+?>
+<li class="membership-link">
+    <a href="<?php echo $block->getMembershipUrl()?>">
+        <?php echo $block->escapeHtml($block->getLabel()); ?>
+    </a>
+</li>
